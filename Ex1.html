@@ -17,8 +17,7 @@
     
     <p></p>
     <button id=limpar>Limpar lista</button>
-    <p></p>
-    <hi>Itens: <span id="total"></span></hi>
+    <p>Itens: <span id="total"></span></p>
 
     <ul>
 
@@ -51,7 +50,7 @@
             document.forms.listaCompra.quantidade.focus();
         }
         function limpaLista() {
-            i = Number(lista.childElementCount);
+             var i = Number(lista.childElementCount);
             while (i > 0) {
                 lista.removeChild(itens[0]);
                 i--;
