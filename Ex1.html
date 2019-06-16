@@ -2,9 +2,50 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
+    <title>Lista 2 Exercício 1</title>
 </head>
 <body>
+    <h1>Lista de Compras</h1>
     
+    <form name="listaCompra">
+        <input type="number" name="quantidade" />
+        <input type="text" name="item">
+        <input type="submit" />
+    </form>
+
+    <p></p>
+    <button id=limpar>Limpar lista</button>
+    <p></p>
+
+    <ul>
+
+    </ul>
+
+    <script>
+        var listaCompras = [];
+        var lista = document.getElementsByTagName("ul")[0];
+        var botaoLimpar = document.querySelector("#limpar");
+        var itens = lista.getElementsByTagName('li');
+        document.forms.listaCompra.addEventListener("submit", processaEnvio);
+        limpar.addEventListener("click", limpaLista);
+        function processaEnvio(e) {
+            e.preventDefault();
+            console.log("Formulário enviado!");
+            var quantidade = Number(document.forms.listaCompra.quantidade.value);
+            var item = document.forms.listaCompra.item.value;
+            console.log(quantidade, item);
+            var novaCompra = { "quantidade": quantidade, "item": item };
+            listaCompras.push(novaCompra);
+            var novoLi = document.createElement("li");
+            novoLi.textContent = novaCompra.quantidade + " - " + novaCompra.item;
+            lista.appendChild(novoLi);
+            document.forms.listaCompra.reset();
+            document.forms.listaCompra.quantidade.focus();
+        }
+
+       
+    </script>
+
 </body>
+
 </html>
