@@ -1,10 +1,71 @@
 <!DOCTYPE html>
 <html lang="pt">
+
 <head>
     <meta charset="UTF-8">
     <title>Lista 2 Exercício 2</title>
 </head>
+
 <body>
-    
+    <h1>Ilustração da E.D. Pilha</h1>
+
+    <form name="listaOrd">
+        <input type="text" name="item">
+    </form>
+
+    <p></p>
+    <button id=BtnEmpilha>Empilha</button>
+    <button id=BtnDesempilha>Desempilha</button>
+    <p>Itens: <span id="total"></span></p>
+
+    <ol>
+
+    </ol>
+
+    <h4>
+
+    </h4>
+
+    <script>
+        var listaOrd = [];
+        var lista = document.getElementsByTagName("ol")[0];
+        var botaoEmpilha = document.querySelector("#empilha");
+        var botaoDempilha = document.querySelector("#desempilha");
+        var liTotal = document.getElementById("total");
+        var itens = lista.getElementsByTagName('li');
+        var msn = document.getElementsByTagName("h4")[0];
+
+        BtnEmpilha.addEventListener("click", empilhalista);
+        BtnDesempilha.addEventListener("click", desempilhaLista);
+
+        function empilhalista(e) {
+            e.preventDefault();
+            console.log("Formulário enviado!");
+            var item = document.forms.listaOrd.item.value;
+            console.log(item);
+            var novoItem = { "item": item };
+            listaOrd.push(novoItem);
+            var novoli = document.createElement("li");
+            novoli.textContent = novoItem.item;
+            lista.appendChild(novoli);
+            liTotal.textContent = lista.children.length;
+            document.forms.listaOrd.reset();
+            document.forms.listaOrd.item.focus();
+            msn.textContent = " ";
+        }
+
+        function desempilhaLista() {
+            if (lista.children.length > 0) {
+                lista.removeChild(itens[(Number(lista.children.length) - 1)]);
+            } else {
+                console.log("Lista vazia!!")
+                msn.textContent = "Lista vazia!!";
+            }
+            liTotal.textContent = lista.children.length;
+        }
+
+    </script>
+
 </body>
+
 </html>
