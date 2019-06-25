@@ -7,69 +7,135 @@
 </head>
 
 <body>
-    <form name="excurcao">
-        <label> Nome: <input type="text" name="nome"></label>
-        <p></p>
-        <label> Idade: <input type="number" name="idade"></label>
-        <br><br>
-        <input type="submit">
-    </form>
+    <h2>Cadastro de Excurção</h2>
+        
+        <form name="excurcao">
+            <input type="hidden" name="chave" value=""/>
+            <label> Nome: </label>
+            <input type="text" placeholder="Digite o nome" name="nome" /><br><br>
+            <label> Idade:</label>
+            <input type="number" placeholder="Idade" name="idade"/><br><br>
+            <input type="submit"/>
+            <button type="button" id="btnLimpar">Limpar</button>
+            <button type="button" title="Excluir" id="btnExcluir" disabled="true">Excluir</button>
+        </form>
+    
+        <h4>Adulto - <span id="tAdulto"> </span> (maiores de 18 anos)</h4>
+        <ul1> 
 
-    <h3>Adulto - <span id="tAdulto"></span></h3>
+        </ul1>
+        
+        <h4>Estudante - <span id="tEstudante"></span></h4>
+        <ul2> 
 
-    <ul1>
+        </ul2>
+        
+        <h4>Total inscritos: <span id="total"> </span></h4>
 
-    </ul1>
-    <br>
-
-    <h3>Estudante - <span id="tEstudante"></span></h3>
-
-    <ul2>
-
-    </ul2>
-    <br>
-
-    <h3>Total inscritos: <span id="total"> </span></h3>
 
     <script>
+        
+        var chave = 1;
         var listaNomes = [];
+        var slNome = document.createElement("span");
+        var slIdade = document.createElement("span");
+        var novoLi;
         var lista1 = document.getElementsByTagName("ul1")[0];
         var lista2 = document.getElementsByTagName("ul2")[0];
-        var botaoLimpar = document.querySelector("#limpa");
+        var sLista1 = document.querySelector("ul1");
+        var sLista2 = document.querySelector("ul2");
         var liTotal = document.getElementById("total");
         var liAdulto = document.getElementById("tAdulto");
         var liEstudante = document.getElementById("tEstudante");
-
-        liAdulto.textContent = lista1.children.length;
-        liEstudante.textContent = lista2.children.length;
-        liTotal.textContent = lista1.childElementCount + lista2.childElementCount;
-
-        var itens = lista1.getElementsByTagName('li');
-        var i = Number(lista1.childElementCount);
+        var bExcluir = document.getElementById("btnExcluir");
+        var btnLimpar = document.getElementById("btnLimpar");
+        var itens = lista1.getElementsByTagName("li");
+        var itens2 = lista2.getElementsByTagName("li");
+        var chave = Number(document.forms.excurcao.chave.value);
+        var nome = document.forms.excurcao.nome.value;
+        var idade = Number(document.forms.excurcao.idade.value);
         document.forms.excurcao.addEventListener("submit", enviar);
+        btnLimpar.addEventListener("click", limparForm);
+        bExcluir.addEventListener("click", excluiItem);
+        desenhaListas();
+        
         function enviar(e) {
             e.preventDefault();
             console.log("Formulário enviado!");
-            var nome = document.forms.excurcao.nome.value;
-            var idade = Number(document.forms.excurcao.idade.value);
-            console.log(nome, idade);
-            var novaLista = { "nome": nome, "idade": idade };
-            listaNomes.push(novaLista);
-            var novoLi = document.createElement("li");
-            novoLi.textContent = novaLista.nome + " - " + novaLista.idade;
-            if (idade >= 18) {
-                lista1.appendChild(novoLi);
-                liAdulto.textContent = lista1.children.length;
+            var vChave = Number(document.forms.excurcao.chave.value);
+            var vNome = document.forms.excurcao.nome.value;
+            var vIdade = Number(document.forms.excurcao.idade.value);
+            var x = listaNomes.length;
+            if (chave) {
+                for (var i = 0; i < x; i++) {
+                    if (listaNomes[i].chave === vChave) {
+                        listaNomes[i].nome = vNome;
+                        listaNomes[i].idade = vIdade;
+                        document.forms.excurcao.chave.value = " ";
+                    }
+                }
             } else {
-                lista2.appendChild(novoLi);
-                liEstudante.textContent = lista2.children.length;
+                vChave = x;
+                console.log(vChave);
+                var novaPessoa = { chave: vChave++, nome: vNome, idade: vIdade };
+                listaNomes.push(novaPessoa);
             }
-            liTotal.textContent = lista1.childElementCount + lista2.childElementCount;
+            console.log("selecionada: ", vChave);
+            desenhaListas();
+            console.log(vChave, vNome, vIdade, listaNomes.length);
             document.forms.excurcao.reset();
             document.forms.excurcao.nome.focus();
+            bExcluir.disabled = true;
         }
-
+        function limparForm() {
+            document.forms.excurcao.reset();
+        }
+        function desenhaListas() {
+            lista1.innerHTML = "";
+            lista2.innerHTML = "";
+            for (var i = 0; i < listaNomes.length; i++) {
+                var pessoa = listaNomes[i];
+                var novoLi = document.createElement("li");
+                novoLi.textContent = pessoa.nome + " - " + pessoa.idade;
+                novoLi.addEventListener("click", criaOuvinte(pessoa));
+                if (pessoa.idade < 18) {
+                    lista2.appendChild(novoLi);
+                } else {
+                    lista1.appendChild(novoLi);
+                }
+            }
+            liTotal.textContent = listaNomes.length;
+            liAdulto.textContent = lista1.children.length;
+            liEstudante.textContent = lista2.children.length;
+        }
+        function criaOuvinte(pessoa) {
+            return function (e) {
+                document.forms.excurcao.chave.value = pessoa.chave;
+                document.forms.excurcao.nome.value = pessoa.nome;
+                document.forms.excurcao.idade.value = pessoa.idade;
+                bExcluir.disabled = false;
+                document.forms.excurcao.nome.focus();
+                for (var i = 0; i < lista1.children.length; i++) {
+                    itens[i].style.color = "black";
+                }
+                for (var i = 0; i < lista2.children.length; i++) {
+                    itens2[i].style.color = "black";
+                }
+                e.srcElement.style.color = "red";
+                console.log("Item: ", e.srcElement, pessoa);
+            };
+        }
+        function excluiItem() {
+            var chave = document.forms.excurcao.chave.value;
+            for (var i = 0; i < listaNomes.length; i++) {
+                if (listaNomes[i].chave == chave) {
+                    listaNomes.splice(i, 1);
+                    document.forms.excurcao.reset();
+                    bExcluir.disabled = true;
+                    desenhaListas();
+                }
+            }
+        }
     </script>
 </body>
-
 </html>
